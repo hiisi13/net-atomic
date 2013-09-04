@@ -6,7 +6,7 @@ namespace NetAtomic
     public class Atomic<TValue>
     {
         private readonly object _valueLock = new object();
-        public TValue Value { get; private set; }
+        public TValue Value { get; protected set; }
  
         public Atomic()
         {
