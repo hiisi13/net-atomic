@@ -1,56 +1,35 @@
 ﻿using System;
-using System.Threading;
 
 namespace NetAtomic
 {
-    public class Atomic<TValue>
+    public class Atomic<TValue> : AtomicBase<TValue>
     {
-        private readonly object _valueLock = new object();
-        public TValue Value { get; protected set; }
- 
         public Atomic()
         {
         }
         
-        public Atomic(TValue value)
+        public Atomic(TValue value) : base(value)
         {
-            Value = value;
         }
 
         public TValue Update(Func<TValue, TValue> updateFunc)
         {
-            lock (_valueLock)
-            {
-                Value = updateFunc(Value);
-                return Value;
-            }
+            return update(updateFunc);
         }
 
         public TValue Update(TValue value)
         {
-            return Update(x => value);
+            return update(x => value);
         }
 
         public bool TryUpdate(Func<TValue, TValue> updateFunc)
         {
-            if (Monitor.TryEnter(_valueLock))
-            {
-                try
-                {
-                    Value = updateFunc(Value);
-                    return true;
-                }
-                finally
-                {
-                    Monitor.Exit(_valueLock);
-                }
-            }
-            return false;
+            return tryUpdate(updateFunc);
         }
 
         public bool TryUpdate(TValue value)
         {
-            return TryUpdate(x => value);
+            return tryUpdate(x => value);
         }
     }
 }

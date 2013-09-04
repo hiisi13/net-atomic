@@ -2,7 +2,7 @@
 
 namespace NetAtomic
 {
-    public abstract class AtomicIntegerBase : Atomic<int>
+    public abstract class AtomicIntegerBase : AtomicBase<int>
     {
         protected AtomicIntegerBase()
         {
@@ -15,12 +15,12 @@ namespace NetAtomic
 
         protected int add(int value)
         {
-            return Update(x => x + value);
+            return update(x => x + value);
         }
 
         protected int add(Func<int, int> updateFunc)
         {
-            return Update(x => x + updateFunc(x));
+            return update(x => x + updateFunc(x));
         }
     }
 }
